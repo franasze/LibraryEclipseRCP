@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><books>
+	<book id="1">
+		<title>Pan Taduesz</title>
+		<author>Adam Mickiewicz</author>
+		<publicationYear>1834</publicationYear>
+		<ISBN>100</ISBN>
+		<status>true</status>
+	</book>
+	<book id="2">
+		<title>Lalka</title>
+		<author>Boleslaw Prus</author>
+		<publicationYear>1889</publicationYear>
+		<ISBN>101</ISBN>
+		<status>true</status>
+	</book>
+	<book id="3">
+		<title>Kordian</title>
+		<author>Juliusz Slowacki</author>
+		<publicationYear>1834</publicationYear>
+		<ISBN>102</ISBN>
+		<status>true</status>
+	</book>
+</books>

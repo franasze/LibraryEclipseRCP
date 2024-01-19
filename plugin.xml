@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="pluginprojectlibraryeclipsercp.Application">
+         </run>
+      </application>
+   </extension>
+   
+    <extension
+   		point="org.eclipse.ui.handlers">
+  		<handler
+    		class="pluginprojectlibraryeclipsercp.handlers.ViewHandler"
+      		commandId="com.example.ViewCommand2">
+   		</handler>
+   </extension>
+   
+   <extension
+  	 point="org.eclipse.ui.commands">
+   	<command
+     	 id="com.example.ViewCommand2"
+      	name="open View"
+      	categoryId="org.eclipse.ui.category.file">
+   	</command>
+   </extension> 
+   
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="pluginprojectlibraryeclipsercp.Perspective"
+            name="Perspective"
+            id="Plug-inProjectLibraryEclipseRCP.perspective">
+      </perspective>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="pluginprojectlibraryeclipsercp.views.View"
+            name="View"
+            id="Plug-inProjectLibraryEclipseRCP.view"
+            inject="true">
+      </view>
+   </extension>
+   
+     <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="pluginprojectlibraryeclipsercp.views.BookListView"
+            name="BookListView"
+            id="Plug-inProjectLibraryEclipseRCP.booklistview"
+            inject="true">
+      </view>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="*">
+         <view
+               id="Plug-inProjectLibraryEclipseRCP.view"
+               minimized="false"
+               relationship="left"
+               standalone="true"
+               relative="org.eclipse.ui.editorss">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu">
+         <menu
+               label="File">
+            <command
+                  commandId="org.eclipse.ui.file.exit"
+                  label="Exit">
+            </command>
+         </menu>
+         
+          <toolbar id="Plug-inProjectLibraryEclipseRCP.sampleToolbar">
+            <command
+                commandId="com.example.ViewCommand"
+                label="Open Second View"
+                style="push">
+            </command>
+        </toolbar>
+         
+         
+      </menuContribution>
+   </extension>
+
+</plugin>
