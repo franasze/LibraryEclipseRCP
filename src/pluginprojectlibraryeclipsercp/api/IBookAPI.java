@@ -2,15 +2,13 @@ package pluginprojectlibraryeclipsercp.api;
 
 import java.util.List;
 
-import pluginprojectlibraryeclipsercp.model.Book;
-
 
 public interface IBookAPI {
-	List<Book> getBooks();
+	List<IBook> getBooks();
 	
-	void addBook(Book book);
+	void addBook(IBook book);
 	
 	void deleteBook(final int id);
 
-	void rentBook(String title);
+	void borrowBook(String title);
 }

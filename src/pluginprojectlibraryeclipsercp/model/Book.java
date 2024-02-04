@@ -1,6 +1,8 @@
 package pluginprojectlibraryeclipsercp.model;
 
-public class Book {
+import pluginprojectlibraryeclipsercp.api.IBook;
+
+public class Book implements IBook {
 
 	private static int counter = 0;
 

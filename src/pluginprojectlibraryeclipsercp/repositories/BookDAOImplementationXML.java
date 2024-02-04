@@ -20,14 +20,14 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import pluginprojectlibraryeclipsercp.model.Book;
-
+import pluginprojectlibraryeclipsercp.api.IBook;
 import pluginprojectlibraryeclipsercp.api.IBookAPI;
 
-public class BookDAOImplementation1 implements IBookAPI {
+public class BookDAOImplementationXML implements IBookAPI {
 	@Override
-	public List<Book> getBooks() {
+	public List<IBook> getBooks() {
 
-		List<Book> books = new ArrayList<>();
+		List<IBook> books = new ArrayList<>();
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -75,7 +75,7 @@ public class BookDAOImplementation1 implements IBookAPI {
 	}
 
 	@Override
-	public void addBook(Book book) {
+	public void addBook(IBook book) {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
@@ -173,7 +173,7 @@ public class BookDAOImplementation1 implements IBookAPI {
 	}
 
 	@Override
-	public void rentBook(String title) {
+	public void borrowBook(String title) {
 
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

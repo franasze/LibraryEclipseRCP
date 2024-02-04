@@ -10,11 +10,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -29,7 +31,7 @@ import pluginprojectlibraryeclipsercp.jobs.CheckBookStatusJob;
 import pluginprojectlibraryeclipsercp.model.Book;
 
 public class View extends ViewPart {
-	public static final String ID = "Plug-inProjectLibraryEclipseRCP.view";
+	public static final String ID = "Plug-inProjectLibraryEclipseRCPP.view";
 	private StackLayout stackLayout;
 	private Composite stackComposite;
 
@@ -37,11 +39,18 @@ public class View extends ViewPart {
 	private Composite formPanel;
 	private Composite deletePanel;
 	private Composite borrowPanel;
-
-	private Controller controller = new Controller();
+	Font font;
+	private Controller controller = Controller.getInstance();
 
 	@Override
 	public void createPartControl(Composite parent) {
+		try {
+			CheckBookStatusJob job = new CheckBookStatusJob("checkStatus",
+					"C:/Users/areka/eclipse-workspace/Plug-inProjectLibraryEclipseRCPP/resources/books.xml");
+			job.schedule();
+		} catch (NullPointerException except) {
+			System.out.println("Object is NULL!!!  " + except);
+		}
 
 		getSite().getShell().setMinimumSize(800, 600);
 		stackComposite = new Composite(parent, SWT.NONE);
@@ -62,12 +71,17 @@ public class View extends ViewPart {
 
 	private Composite createMainPanel(Composite parent) {
 		Composite mainPanel = new Composite(parent, SWT.NONE);
-		mainPanel.setLayout(new FillLayout(SWT.VERTICAL));
-
+		mainPanel.setLayout(new GridLayout(1, false));
+		
+		mainPanel.setBackground(new Color(215,226,252) );
 		Label bigLabel = new Label(mainPanel, SWT.NONE);
 		bigLabel.setText("Library in Eclipse RCP");
-		bigLabel.setFont(new Font(Display.getCurrent(), "Forte", 44, SWT.BOLD));
-		bigLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true));
+		font = new Font(Display.getCurrent(), "Forte", 44, SWT.BOLD);
+		bigLabel.setFont(font);
+		bigLabel.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true));
+
+		GridData buttonLayoutData = new GridData(SWT.CENTER, SWT.TOP, true, true);
+		mainPanel.setLayoutData(buttonLayoutData);
 
 		Button button = new Button(mainPanel, SWT.PUSH);
 		Button button2 = new Button(mainPanel, SWT.PUSH);
@@ -77,6 +91,13 @@ public class View extends ViewPart {
 		button2.setText("Add a book");
 		button3.setText("Delete a book");
 		button4.setText("Borrow a book");
+
+		buttonLayoutData.widthHint = 150;
+		buttonLayoutData.heightHint = 60;
+		button.setLayoutData(buttonLayoutData);
+		button2.setLayoutData(buttonLayoutData);
+		button3.setLayoutData(buttonLayoutData);
+		button4.setLayoutData(buttonLayoutData);
 
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -103,14 +124,13 @@ public class View extends ViewPart {
 			public void widgetSelected(SelectionEvent e) {
 				stackLayout.topControl = borrowPanel;
 				stackComposite.layout();
-				CheckBookStatusJob job = new CheckBookStatusJob();
-				job.schedule(5000);
 			}
 		});
 		return mainPanel;
 	}
 
 	private Composite createAddBookPanel(Composite parent) {
+
 		Composite formPanel = new Composite(parent, SWT.NONE);
 		formPanel.setLayout(new FillLayout(SWT.VERTICAL));
 		Text title;
@@ -179,24 +199,33 @@ public class View extends ViewPart {
 		submitButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				stackLayout.topControl = mainPanel;
-				formPanel.setVisible(false);
-				stackComposite.layout();
+				try {
+					stackLayout.topControl = mainPanel;
+					formPanel.setVisible(false);
+					stackComposite.layout();
 
-				String titleValue = title.getText();
-				String authorValue = author.getText();
-				int yearValue = Integer.parseInt(year.getText());
-				int ISBNValue = Integer.parseInt(ISBN.getText());
-				Book newBook = new Book(titleValue, authorValue, yearValue, ISBNValue, true);
-				System.out.println("New Book: \n" + newBook);
-				controller.getRepository().addBook(newBook);
-				controller.notifyObservers();
+					String titleValue = title.getText();
+					String authorValue = author.getText();
+					int yearValue = Integer.parseInt(year.getText());
+					int ISBNValue = Integer.parseInt(ISBN.getText());
+					Book newBook = new Book(titleValue, authorValue, yearValue, ISBNValue, true);
+					System.out.println("New Book: \n" + newBook);
+					controller.getRepository().addBook(newBook);
+					controller.notifyObservers();
+				} catch (NumberFormatException except) {
+					System.out.println("You entered incorrect values " + except);
+				} catch (NullPointerException except) {
+					System.out.println("Object is NULL!!!  " + except);
+				}
 			}
 		});
+
 		return formPanel;
+
 	}
 
 	private Composite createDeleteBookPanel(Composite parent) {
+
 		Composite deletePanel = new Composite(parent, SWT.NONE);
 		deletePanel.setLayout(new FillLayout(SWT.VERTICAL));
 		Text id;
@@ -216,16 +245,25 @@ public class View extends ViewPart {
 		Button submitButton = new Button(deletePanel, SWT.PUSH);
 		submitButton.setText("Submit");
 		submitButton.addSelectionListener(new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				stackLayout.topControl = mainPanel;
-				deletePanel.setVisible(false);
-				stackComposite.layout();
+				try {
+					stackLayout.topControl = mainPanel;
+					deletePanel.setVisible(false);
+					stackComposite.layout();
 
-				int ID = Integer.parseInt(id.getText());
-				controller.getRepository().deleteBook(ID);
-				controller.notifyObservers();
+					int ID = Integer.parseInt(id.getText());
+					controller.getRepository().deleteBook(ID);
+					controller.notifyObservers();
+
+				} catch (NumberFormatException except) {
+					System.out.println("You have to enter correct ID number " + except);
+				} catch (NullPointerException except) {
+					System.out.println("Object is NULL!!!  " + except);
+				}
 			}
+
 		});
 
 		return deletePanel;
@@ -253,13 +291,20 @@ public class View extends ViewPart {
 		submitButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				stackLayout.topControl = mainPanel;
-				borrowPanel.setVisible(false);
-				stackComposite.layout();
+				try {
+					stackLayout.topControl = mainPanel;
+					borrowPanel.setVisible(false);
+					stackComposite.layout();
 
-				String titleValue = title.getText();
-				controller.getRepository().rentBook(titleValue);
-				controller.notifyObservers();
+					String titleValue = title.getText();
+					controller.getRepository().borrowBook(titleValue);
+					controller.notifyObservers();
+
+				} catch (NumberFormatException except) {
+					System.out.println("You have to enter correct ID number " + except);
+				} catch (NullPointerException except) {
+					System.out.println("Object is NULL!!!  " + except);
+				}
 			}
 		});
 
@@ -268,7 +313,7 @@ public class View extends ViewPart {
 
 	private void handleButtonClicked() {
 		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-		Command command = commandService.getCommand("com.example.ViewCommand2");
+		Command command = commandService.getCommand("com.example.ViewCommand");
 		try {
 			command.executeWithChecks(new ExecutionEvent());
 		} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException exception) {
@@ -279,5 +324,12 @@ public class View extends ViewPart {
 	@Override
 	public void setFocus() {
 
+	}
+
+	public void dispose() {
+		if (font != null && !font.isDisposed()) {
+			font.dispose();
+		}
+		super.dispose();
 	}
 }
